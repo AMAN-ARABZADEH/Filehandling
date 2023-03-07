@@ -10,7 +10,8 @@
 <body>
 <br>
 
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<div class="container">
+  <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
  <label for="name">Name:</label>
  <input type="text" name="name">
  <br><br><br>
@@ -19,6 +20,7 @@
  <input type="submit" value="Submit" name="submit">
  
 </form>
+</div>
 <br><br><br>
 
 
@@ -31,12 +33,9 @@
 // https://github.com/AMAN-ARABZADEH
 // 
 
-// 
-// 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-
- // Delete
+  // Check for delete
   if (isset($_POST["delete"])) {
     $file = fopen("file.txt", "r");
     $lines = array();
@@ -55,39 +54,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         fwrite($file, $line);
     }
     fclose($file);
-    
+    header("Location: index.php");
+    exit();
   }
 
+  // Check for submit
+  if (isset($_POST["submit"]) && !empty($_POST["name"]) && !empty($_POST["message"])) {
+    if (isset($_POST["name"]) && isset($_POST["message"])) {
+      $name = test_input($_POST["name"]);
+      $message = test_input($_POST["message"]);
+      $date = date('Y-m-d H:i:s');
+      $file = fopen("file.txt", "a");
+      $data = $name . " : " . $message;
 
-
-
- // $name = test_input($_POST["name"]);
- // $message = test_input($_POST["message"]);
-
- // echo "Name is: " . $name . "<br>" . "Message is: " . $message;
-
-// Write to file
-// Check for submit
-if (isset($_POST["submit"])) {
-  if (isset($_POST["name"]) && isset($_POST["message"])) {
-    $name = test_input($_POST["name"]);  // take value from user inpu
-    $message = test_input($_POST["message"]);  // same here 
-    $date = date('Y-m-d H:i:s'); // current date and time
-    $file = fopen("file.txt", "a");  //  open a file
-    $data = $name . " : " . $message;  // concat
-
-
-     // Write inside the file
-    fwrite($file, $name . PHP_EOL);
-    fwrite($file, $message . PHP_EOL);
-    fwrite($file, $date . PHP_EOL);
-    fclose($file);
+      fwrite($file, $name . PHP_EOL);
+      fwrite($file, $message . PHP_EOL);
+      fwrite($file, $date . PHP_EOL);
+      fclose($file);
+      header("Location: index.php");
+      exit();
+    }
   }
 }
 
-}
-
-// Open the samne file
+// Open the same file
 $file = fopen("file.txt", "r");
 
 // read from file
@@ -102,7 +92,7 @@ while (!feof($file)) { // not end of file
     echo "Name: " . $name . "<br>";  
     echo "Message: " . $message . "<br>";
     echo "Date: " . $date . "<br>";
-    echo "<form method='post'>";
+    echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>";
     echo "<input type='hidden' name='delete' value='$line'>";
     echo "<input type='submit'  value='Delete'>";
     echo "</form>";
@@ -111,7 +101,6 @@ while (!feof($file)) { // not end of file
 }
 
 fclose($file);
-
 
 
 
