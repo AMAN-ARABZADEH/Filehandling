@@ -23,3 +23,8 @@ This script is intended as a simple example of file handling in PHP. It is not i
 The messages are stored in a plain text file on the server. For more complex applications, you may want to consider using a database instead.
 This script does not include any form of authentication or security. It is vulnerable to attacks such as SQL injection and cross-site scripting. 
 Do not use this script in production environments without taking appropriate security measures.
+
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
